@@ -3,9 +3,14 @@
 import FooterLink from "@/components/forms/FooterLink";
 import InputField from "@/components/forms/InputField"
 import { Button } from "@/components/ui/button";
+import { signInWithEmail } from "@/lib/actions/auth.actions";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form"
+import { toast } from "sonner";
 
 const SignIn = () => {
+    const router = useRouter()
+
     const {
         register,
         handleSubmit,
@@ -20,9 +25,13 @@ const SignIn = () => {
 
     const onSubmit = async (data: SignInFormData) => {
         try {
-            console.log(data);
-        } catch (error) {
-            console.error(error)
+            const result = await signInWithEmail(data)
+            if (result.success) return router.push('/')
+        } catch (e) {
+            console.error(e)
+            toast.error('Sign in failed.', {
+                description: e instanceof Error ? e.message : 'Failed to sign in.'
+            })
         }
     }
 
@@ -44,11 +53,11 @@ const SignIn = () => {
                 <InputField
                     name="password"
                     label="Password"
-                    placeholder="Enter a strong password"
+                    placeholder="Enter your password"
                     type="password"
                     register={register}
-                    error={errors.email}
-                    validation={{ required: "Email is required", pattern: /^\w+@\w+\.\w+$/, message: 'Email address is required' }}
+                    error={errors.password}
+                    validation={{ required: "Password is required" }}
                 />
 
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
