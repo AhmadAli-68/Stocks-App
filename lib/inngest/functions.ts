@@ -82,7 +82,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
         });
 
         // step #3: Summarize these news via AI for each users
-        const userNewsSummaries: { user: User; newsContent: string | null }[] = []
+        const userNewsSummaries: { user: UserForNewsEmail; newsContent: string | null }[] = []
 
         for (const { user, articles } of results) {
             try {
